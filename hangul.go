@@ -72,7 +72,7 @@ const (
             ['ㅂ', 'ㅅ', 'ㅄ']
   }
         /* 복잡한 모음: [모음1, 모음2, 모음1+모음2] */
-  COMPLEX_VOWELS = []string{
+  COMPLEX_VOWELS = [][]rune{
             ['ㅗ', 'ㅏ', 'ㅘ'],
             ['ㅗ', 'ㅐ', 'ㅙ'],
             ['ㅗ', 'ㅣ', 'ㅚ'],
@@ -89,28 +89,28 @@ var CONSONANTS_HASH,
   COMPLEX_CONSONANTS_HASH,
   COMPLEX_VOWELS_HASH map[rune]int
 
-func _makeHash(array []string) {
+func _makeHash(array []string) map[rune]int {
   var (
     length = len(array)
     hash = map[rune]int{'0':"0"}
   )
   for i := 0; i < length; i++) {
     //if array[i]
-      hash[array[i]] = i;
+      hash[array[i]] = i
   }
-  return hash;
+  return hash
 }
 
 func main(){
 
-  CONSONANTS_HASH = _makeHash(CONSONANTS);
-  CHO_HASH = _makeHash(COMPLETE_CHO);
-  JUNG_HASH = _makeHash(COMPLETE_JUNG);
-  JONG_HASH = _makeHash(COMPLETE_JONG);
+  CONSONANTS_HASH = _makeHash(CONSONANTS)
+  CHO_HASH = _makeHash(COMPLETE_CHO)
+  JUNG_HASH = _makeHash(COMPLETE_JUNG)
+  JONG_HASH = _makeHash(COMPLETE_JONG)
 
 }
     
-    function _makeComplexHash(array) {
+func _makeComplexHash(array) {
         var length = array.length,
             hash = {},
             code1,
