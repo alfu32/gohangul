@@ -24,13 +24,13 @@ const (
             'ㅠ', 'ㅡ', ['ㅡ', 'ㅣ'], 'ㅣ'
         }
         /* Desassembled 종성(coda) */
-  const JONG = []rune{
+  JONG = []rune{
             '', 'ㄱ', 'ㄲ', ['ㄱ', 'ㅅ'], 'ㄴ', ['ㄴ', 'ㅈ'], ['ㄴ', 'ㅎ'], 'ㄷ', 'ㄹ',
             ['ㄹ', 'ㄱ'], ['ㄹ', 'ㅁ'], ['ㄹ', 'ㅂ'], ['ㄹ', 'ㅅ'], ['ㄹ', 'ㅌ'], ['ㄹ', 'ㅍ'], ['ㄹ', 'ㅎ'], 'ㅁ',
             'ㅂ', ['ㅂ', 'ㅅ'], 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'
   }
         /* 유니코드 한글 시작 위치 */
-  HANGUL_OFFSET = 0xAC00, 
+  HANGUL_OFFSET = 0xAC00
         /* 자음 */
   CONSONANTS = []rune{
             'ㄱ', 'ㄲ', 'ㄳ', 'ㄴ', 'ㄵ', 'ㄶ', 'ㄷ', 'ㄸ',
@@ -92,7 +92,7 @@ var CONSONANTS_HASH,
 func _makeHash(array []string) map[rune]int {
   var (
     length = len(array)
-    hash = map[rune]int{'0':"0"}
+    hash = map[rune]int{'0':0}
   )
   for i := 0; i < length; i++) {
     //if array[i]
