@@ -8,58 +8,57 @@ package main
  * under the MIT license.
  */
 
-(function () {
-    'use strict';
-        /* Disassembled 초성(onset) */
-    var CHO = [
+/* Disassembled 초성(onset) */
+const (
+  CHO = []rune{
             'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ',
             'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ',
             'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ',
             'ㅍ', 'ㅎ'
-        ],
-        /* Disassembled 중성(nucleus) */
-        JUNG = [
+        }
+/* Disassembled 중성(nucleus) */
+  JUNG = []rune{
             'ㅏ', 'ㅐ', 'ㅑ', 'ㅒ', 'ㅓ',
             'ㅔ', 'ㅕ', 'ㅖ', 'ㅗ', ['ㅗ', 'ㅏ'], ['ㅗ', 'ㅐ'],
             ['ㅗ', 'ㅣ'], 'ㅛ', 'ㅜ', ['ㅜ', 'ㅓ'], ['ㅜ', 'ㅔ'], ['ㅜ', 'ㅣ'],
             'ㅠ', 'ㅡ', ['ㅡ', 'ㅣ'], 'ㅣ'
-        ],
+        }
         /* Desassembled 종성(coda) */
-        JONG = [
+  const JONG = []rune{
             '', 'ㄱ', 'ㄲ', ['ㄱ', 'ㅅ'], 'ㄴ', ['ㄴ', 'ㅈ'], ['ㄴ', 'ㅎ'], 'ㄷ', 'ㄹ',
             ['ㄹ', 'ㄱ'], ['ㄹ', 'ㅁ'], ['ㄹ', 'ㅂ'], ['ㄹ', 'ㅅ'], ['ㄹ', 'ㅌ'], ['ㄹ', 'ㅍ'], ['ㄹ', 'ㅎ'], 'ㅁ',
             'ㅂ', ['ㅂ', 'ㅅ'], 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'
-        ],
+  }
         /* 유니코드 한글 시작 위치 */
-        HANGUL_OFFSET = 0xAC00, 
+  HANGUL_OFFSET = 0xAC00, 
         /* 자음 */
-        CONSONANTS = [
+  CONSONANTS = []rune{
             'ㄱ', 'ㄲ', 'ㄳ', 'ㄴ', 'ㄵ', 'ㄶ', 'ㄷ', 'ㄸ',
             'ㄹ', 'ㄺ', 'ㄻ', 'ㄼ', 'ㄽ', 'ㄾ', 'ㄿ', 'ㅀ',
             'ㅁ', 'ㅂ', 'ㅃ', 'ㅄ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ',
             'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'
-        ],
+  }
         /* Assembled 초성 */
-        COMPLETE_CHO = [
+  COMPLETE_CHO = []rune{
             'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ',
             'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ',
             'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'
-        ],
+  }
         /* Assembled 중성 */
-        COMPLETE_JUNG = [
+  COMPLETE_JUNG = []rune{
             'ㅏ', 'ㅐ', 'ㅑ', 'ㅒ', 'ㅓ',
             'ㅔ', 'ㅕ', 'ㅖ', 'ㅗ', 'ㅘ', 'ㅙ',
             'ㅚ', 'ㅛ', 'ㅜ', 'ㅝ', 'ㅞ', 'ㅟ',
             'ㅠ', 'ㅡ', 'ㅢ', 'ㅣ'
-        ],
+  }
         /* Assembled 종성 */
-        COMPLETE_JONG = [
+  COMPLETE_JONG = []rune{
             '', 'ㄱ', 'ㄲ', 'ㄳ', 'ㄴ', 'ㄵ', 'ㄶ', 'ㄷ', 'ㄹ',
             'ㄺ', 'ㄻ', 'ㄼ', 'ㄽ', 'ㄾ', 'ㄿ', 'ㅀ', 'ㅁ',
             'ㅂ', 'ㅄ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'
-        ],
+  }
         /* 복잡한 자음: [ 자음1, 자음2, 자음1+자음2 ] */
-        COMPLEX_CONSONANTS = [
+  COMPLEX_CONSONANTS = [][]rune{
             ['ㄱ', 'ㅅ', 'ㄳ'],
             ['ㄴ', 'ㅈ', 'ㄵ'],
             ['ㄴ', 'ㅎ', 'ㄶ'],
@@ -71,9 +70,9 @@ package main
             ['ㄹ', 'ㅍ', 'ㄿ'],
             ['ㄹ', 'ㅎ', 'ㅀ'],
             ['ㅂ', 'ㅅ', 'ㅄ']
-        ],
+  }
         /* 복잡한 모음: [모음1, 모음2, 모음1+모음2] */
-        COMPLEX_VOWELS = [
+  COMPLEX_VOWELS = []string{
             ['ㅗ', 'ㅏ', 'ㅘ'],
             ['ㅗ', 'ㅐ', 'ㅙ'],
             ['ㅗ', 'ㅣ', 'ㅚ'],
@@ -81,31 +80,36 @@ package main
             ['ㅜ', 'ㅔ', 'ㅞ'],
             ['ㅜ', 'ㅣ', 'ㅟ'],
             ['ㅡ', 'ㅣ', 'ㅢ']
-        ],
-        CONSONANTS_HASH,
-        CHO_HASH,
-        JUNG_HASH,
-        JONG_HASH,
-        COMPLEX_CONSONANTS_HASH,
-        COMPLEX_VOWELS_HASH
-        ;
+  }
+)
+var CONSONANTS_HASH,
+  CHO_HASH,
+  JUNG_HASH,
+  JONG_HASH,
+  COMPLEX_CONSONANTS_HASH,
+  COMPLEX_VOWELS_HASH map[rune]int
 
-    function _makeHash(array) {
-        var length = array.length,
-            hash = { 0: 0 }
-            ;
-        for (var i = 0; i < length; i++) {
-            if (array[i])
-                hash[array[i].charCodeAt(0)] = i;
-        }
-        return hash;
-    }
+func _makeHash(array []string) {
+  var (
+    length = len(array)
+    hash = map[rune]int{'0':"0"}
+  )
+  for i := 0; i < length; i++) {
+    //if array[i]
+      hash[array[i]] = i;
+  }
+  return hash;
+}
 
-    CONSONANTS_HASH = _makeHash(CONSONANTS);
-    CHO_HASH = _makeHash(COMPLETE_CHO);
-    JUNG_HASH = _makeHash(COMPLETE_JUNG);
-    JONG_HASH = _makeHash(COMPLETE_JONG);
+func main(){
 
+  CONSONANTS_HASH = _makeHash(CONSONANTS);
+  CHO_HASH = _makeHash(COMPLETE_CHO);
+  JUNG_HASH = _makeHash(COMPLETE_JUNG);
+  JONG_HASH = _makeHash(COMPLETE_JONG);
+
+}
+    
     function _makeComplexHash(array) {
         var length = array.length,
             hash = {},
@@ -583,15 +587,4 @@ package main
             return true;
         }
     };
-
-    if (typeof define == 'function' && define.amd) {
-        define(function () {
-            return hangul;
-        });
-    } else if (typeof module !== 'undefined') {
-        module.exports = hangul;
-    } else {
-        window.Hangul = hangul;
-    }
-})();
 
