@@ -101,82 +101,100 @@ func _makeHash(array []string) map[rune]int {
   return hash
 }
 
-func main(){
+func BuildIndexes(){
 
   CONSONANTS_HASH = _makeHash(CONSONANTS)
   CHO_HASH = _makeHash(COMPLETE_CHO)
   JUNG_HASH = _makeHash(COMPLETE_JUNG)
   JONG_HASH = _makeHash(COMPLETE_JONG)
 
+  COMPLEX_CONSONANTS_HASH = _makeComplexHash(COMPLEX_CONSONANTS);
+  COMPLEX_VOWELS_HASH = _makeComplexHash(COMPLEX_VOWELS);
+
 }
     
-func _makeComplexHash(array) {
-        var length = array.length,
-            hash = {},
-            code1,
-            code2
-            ;
-        for (var i = 0; i < length; i++) {
-            code1 = array[i][0].charCodeAt(0);
-            code2 = array[i][1].charCodeAt(0);
-            if (typeof hash[code1] === 'undefined') {
-                hash[code1] = {};
+func _makeComplexHash(array [][]rune) map[rune]map[rune]rune {
+        var (
+          length int:=len(array)
+          hash := map[rune]map[rune]rune{}
+          code1 int
+          code2 int
+        )
+        for i := 0; i < length; i++ {
+            code1 = array[i][0]
+            code2 = array[i][1]
+            if v,ok:=hash[code1];!ok {
+                hash[code1] = map[rune]{}
             }
-            hash[code1][code2] = array[i][2].charCodeAt(0);
+            hash[code1][code2] = array[i][2]
         }
         return hash;
     }
 
-    COMPLEX_CONSONANTS_HASH = _makeComplexHash(COMPLEX_CONSONANTS);
-    COMPLEX_VOWELS_HASH = _makeComplexHash(COMPLEX_VOWELS);
-
     /* c 가 CONSONANTS의 멤버일 경우 true 반환 (c가 자음일 경우 true 반환) */ 
-    function _isConsonant(c) {
-        return typeof CONSONANTS_HASH[c] !== 'undefined';
+    func _isConsonant(c rune) bool {
+      _,ok:= CONSONANTS_HASH[c]
+      return ok
     }
     /* c 가 COMPLETE_JUNG의 멤버일 경우 true 반환 (c 가 초성일 경우 true 반환) */
-    function _isCho(c) {
-        return typeof CHO_HASH[c] !== 'undefined';
+    func _isCho(c rune) bool {
+      _,ok:= CHO_HASH[c]
+      return ok
     }
     /* c 가 COMPLETE_JUNG의 멤버일 경우 true 반환 (c 가 중성일 경우 true 반환) */
-    function _isJung(c) {
-        return typeof JUNG_HASH[c] !== 'undefined';
+    func _isJung(c rune) bool {
+      _,ok:= JUNG_HASH[c]
+      return ok
     }
     /* c 가 COMPLETE_JONG의 멤버일 경우 true 반환 (c 가 종성일 경우 true 반환) */
-    function _isJong(c) {
-        return typeof JONG_HASH[c] !== 'undefined';
+    func _isJong(c ru e) bool{
+      _,ok:=JONG_HASH[c]
+      return ok
     }
     /* c 가 한글일 경우 true 반환 */
-    function _isHangul(c /* code number */) {
+    func _isHangul(c rune/* code number */) bool {
         return 0xAC00 <= c && c <= 0xd7a3;
     }
     /* a와 b가 중성으로서 결합할 수 있는 경우 COMPLEX_VOWELS_HASH[a][b] 값(결합한 종성의 유니코드 값) 반환 */
-    function _isJungJoinable(a, b) {
-        return (COMPLEX_VOWELS_HASH[a] && COMPLEX_VOWELS_HASH[a][b]) ? COMPLEX_VOWELS_HASH[a][b] : false;
+    func _isJungJoinable(a rune, b rune) bool {
+      if v,ok:=COMPLEX_VOWELS_HASH[a];ok{
+        if v2,ok2:=v[b];ok2{
+          return true
+        }
+      }
+      return false
+      // return (COMPLEX_VOWELS_HASH[a] && COMPLEX_VOWELS_HASH[a][b]) ? COMPLEX_VOWELS_HASH[a][b] : false;
     }
     /* a와 b가 종성으로서 결합할 수 있는 경우 COMPLEX_CONSONANTS_HASH[a][b] 값(결합한 종성의 유니코드 값) 반환 */
-    function _isJongJoinable(a, b) {
-        return COMPLEX_CONSONANTS_HASH[a] && COMPLEX_CONSONANTS_HASH[a][b] ? COMPLEX_CONSONANTS_HASH[a][b] : false;
+    func _isJongJoinable(a rune, b rune) bool {
+      if v,ok:=COMPLEX_CONSONANTS_HASH[a];ok{
+        if v2,ok2:=v[b];ok2{
+          return true
+        }
+      }
+      return false
+      // return COMPLEX_CONSONANTS_HASH[a] && COMPLEX_CONSONANTS_HASH[a][b] ? COMPLEX_CONSONANTS_HASH[a][b] : false;
     }
     
-    var disassemble = function (string, grouped) {
+    func dissasemble(src string, grouped bool) ([]string,error) {
         /* 입력값이 NULL일 경우 에러 발생 */
-        if (string === null) {
-            throw new Error('Arguments cannot be null');
+        if src == nil{
+          return []string{},fmt.Error('Arguments cannot be null');
         }
         /* 입력값이 'object' 타입인 경우 문자열로 병합 */
-        if (typeof string === 'object') {
-            string = string.join('');
+        if src.(type) == []string {
+            src = strings.Join(src'');
         }
         
-        var result = [],
-            length = string.length,
+        var (
+          result := []string,
+            length = len(src)
             cho,
             jung,
             jong,
             code,
             r
-            ;
+        )
         /* 모든 문자에 대해 확인 */
         for (var i = 0; i < length; i++) {
             var temp = [];
